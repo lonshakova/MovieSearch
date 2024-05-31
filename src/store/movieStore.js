@@ -4,19 +4,23 @@ export const useMoviesStore = defineStore({
   id: 'movies',
   state: () => ({
     movies: [],
-    constMovies: [],
     allMovies:[],
     allMarks: [],
     ratesMovies: [],
+    limit: 24,
+    page: 0,
+    totalPages: 0,
   }),
   actions: {
     async fetchMovies() {
-      return await fetch('../../Data/kinopoisk-1.json')
+      fetch('../../Data/kinopoisk-1.json')
         .then(response => response.json())
-        .then((data) => {
+        .then(data => {
+          window.scrollTo(0, 0);
+          this.page = 0;
           this.allMovies = data.docs;
-          this.constMovies = this.allMovies;
-          return data.docs;
+          this.movies = this.allMovies.slice(this.limit * this.page, this.limit * (this.page + 1));
+          this.totalPages = Math.ceil(this.allMovies.length/this.limit);
         })
         .catch(error => {
           console.error('Ошибка загрузки данных', error);
@@ -24,17 +28,51 @@ export const useMoviesStore = defineStore({
     },
 
     async fetchMoviesMarks() {
-      await this.fetchMovies();
-      this.loadMarks();
-      this.allMovies = this.allMarks;
-      this.constMovies = this.allMovies;
+      fetch('../../Data/kinopoisk-1.json')
+        .then(response => response.json())
+        .then(data => {
+          window.scrollTo(0, 0);
+          this.page = 0;
+          this.allMovies = data.docs;
+          this.loadMarks();
+          this.allMovies = this.allMarks;
+          this.totalPages = Math.ceil(this.allMovies.length/this.limit);
+        })
+        .catch(error => {
+          console.error('Ошибка загрузки данных', error);
+        });
     },
 
     async fetchMoviesRates() {
-      await this.fetchMovies();
-      this.loadRates();
-      this.allMovies = this.ratesMovies;
-      this.constMovies = this.allMovies;
+      fetch('../../Data/kinopoisk-1.json')
+        .then(response => response.json())
+        .then(data => {
+          window.scrollTo(0, 0);
+          this.page = 0;
+          this.allMovies = data.docs;
+          this.loadRates();
+          this.allMovies = this.ratesMovies;
+          this.totalPages = Math.ceil(this.allMovies.length/this.limit);
+        })
+        .catch(error => {
+          console.error('Ошибка загрузки данных', error);
+        });
+    },
+
+    async fetchMovie() {
+      fetch('../../Data/kinopoisk-1.json')
+        .then(response => response.json())
+        .then(data => {
+          window.scrollTo(0, 0);
+          this.page = 0;
+          this.allMovies = data.docs;
+          this.loadRates();
+          this.allMovies = this.ratesMovies;
+          this.totalPages = Math.ceil(this.allMovies.length/this.limit);
+        })
+        .catch(error => {
+          console.error('Ошибка загрузки данных', error);
+        });
     },
 
     loadMarks() {
@@ -56,21 +94,35 @@ export const useMoviesStore = defineStore({
       }
     },
 
+    loadMovie() {
+      const movie = this.allMovies.find(movie => movie.id == this.$route.params.id);
+    },
+
     updateList(newList) {
       switch (newList) {
         case 'main':
           this.fetchMovies();
+          this.movies=this.allMovies.slice(this.limit * this.page, this.limit * (this.page + 1));
           break;
         case 'marks':
           this.fetchMoviesMarks();
+          this.movies = this.allMarks.slice(this.limit * this.page, this.limit * (this.page + 1));
           break;
         case 'ratings':
           this.fetchMoviesRates();
+          this.movies = this.ratesMovies.slice(this.limit * this.page, this.limit * (this.page + 1));
           break;
+        case 'movie':
+          this.fetchMovies(); 
+          this.loadMovie();
         default:
           this.fetchMovies();
           break;
       }
+    },
+
+    updatePage(number) {
+      this.page = number;
     },
 
     markMovie(id) {
