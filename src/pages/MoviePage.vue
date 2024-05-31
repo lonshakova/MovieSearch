@@ -2,7 +2,7 @@
   <div class="movie">
     <v-img class="poster" 
     :src="movie.poster.url"
-    gradient="to right, rgba(44, 62, 80, 0.0), rgba(44, 62, 80, 0.0),rgba(44, 62, 80, 0.5),rgba(44, 62, 80, 1)"
+    gradient="to right, rgba(44, 62, 80, 0.0), rgba(44, 62, 80, 0.0), rgba(44, 62, 80, 0.5), rgba(44, 62, 80, 1)"
     cover />
     <div class="inform">
       <div class="name">
@@ -144,12 +144,16 @@ export default {
     }
   },
   
-  created(){
+  created() {
     this.moviesStore.updateList('movie');
     this.moviesStore.allMarks = JSON.parse(localStorage.getItem('marks')) || [];
     this.isMarked = this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
     this.userRate = +localStorage.getItem(this.movie.id);
   },
+  updated() {
+    this.moviesStore.allMarks = JSON.parse(localStorage.getItem('marks')) || [];
+    this.isMarked = this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
+  }
 };
 </script>
 

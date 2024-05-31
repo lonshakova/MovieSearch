@@ -70,7 +70,7 @@ export default {
     },
     searchMovies() {
       if (!this.sortedMovies) {
-        this.moviesStore.movies = this.sortedMovies;
+        this.moviesStore.allMovies = this.sortedMovies;
       }
       if (this.searchQuery) {
         const sortMovies = this.sortedMovies.filter((movie) =>
