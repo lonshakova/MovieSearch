@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     recommendations() {
-      return this.moviesStore.recomendMovies(this.movie);
+      return this.moviesStore.recomendMovies();
     },
     movie() {
       return this.moviesStore.allMovies.find(movie => movie.id == this.$route.params.id);
@@ -145,7 +145,6 @@ export default {
   },
   
   created() {
-    this.moviesStore.updateList('movie');
     this.moviesStore.allMarks = JSON.parse(localStorage.getItem('marks')) || [];
     this.isMarked = this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
     this.userRate = +localStorage.getItem(this.movie.id);

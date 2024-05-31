@@ -103,30 +103,12 @@ export const useMoviesStore = defineStore({
       let count = 3;
       while (list.length < count) {
         const ind = Math.round(Math.random()*this.constMovies.length);
-        const film = this.allMovies[ind];
+        const film = this.constMovies[ind];
         if (film) {
+          const dubl = list.find((move) => film.id === move.id);
           list.push(film);
         }
       }
-      // while (list.length < count) {
-      //   const ind = Math.round(Math.random()*this.allMovies.length);
-      //   const film = this.allMovies[ind];
-      //   if (film) {
-      //     const dubl = list.find((move) => film.id === move.id);
-      //     if (dubl) {
-      //       continue
-      //     } else {
-      //       if (movie.type === 'animated-series' || movie.type === 'cartoon') {
-      //         if (film.type === 'animated-series' || film.type === 'cartoon') {
-      //           list.push(film);
-      //           continue
-      //         }
-      //       }
-      //       if (film.type !== movie.type || film.id === movie.id) { continue };
-      //       list.push(film);
-      //     }
-      //   }
-      // }
       return list
     },
   }
