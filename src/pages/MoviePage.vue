@@ -1,16 +1,18 @@
 <template>
-  <div class="movie">
-    <v-img class="poster" 
-    :src="movie.poster.url"
-    gradient="to right, rgba(44, 62, 80, 0.0), rgba(44, 62, 80, 0.0), rgba(44, 62, 80, 0.5), rgba(44, 62, 80, 1)"
-    cover />
+  <div class="movie" v-if="this.movie">
+    <v-img
+      class="poster"
+      :src="movie.poster.url"
+      gradient="to right, rgba(44, 62, 80, 0.0), rgba(44, 62, 80, 0.0), rgba(44, 62, 80, 0.5), rgba(44, 62, 80, 1)"
+      cover
+    />
     <div class="inform">
       <div class="name">
         {{ movie.name }}
       </div>
       <div class="more-data">
-        <div class="alt-name"> 
-          {{ movie.alternativeName }} 
+        <div class="alt-name">
+          {{ movie.alternativeName }}
         </div>
         <div class="type-and-timing" v-if="movie.type === 'movie'">
           фильм | {{ movie.year }} | {{ timing }}
@@ -19,48 +21,61 @@
           мультфильм | {{ movie.year }} | {{ timing }}
         </div>
         <div class="type-and-timing" v-if="movie.type === 'tv-series'">
-          сериал | {{ movie.releaseYears[0].start }}-{{movie.releaseYears[0].end }} | длина серии {{ timing }} 
+          сериал | {{ movie.releaseYears[0].start }}-{{
+            movie.releaseYears[0].end
+          }}
+          | длина серии {{ timing }}
         </div>
         <div class="type-and-timing" v-if="movie.type === 'animated-series'">
-          мультсериал | {{ movie.releaseYears[0].start}}-{{ movie.releaseYears[0].end }} | длина серии {{ timing }} 
+          мультсериал | {{ movie.releaseYears[0].start }}-{{
+            movie.releaseYears[0].end
+          }}
+          | длина серии {{ timing }}
         </div>
       </div>
       <div class="icons">
-        <v-btn 
-        class="icon" 
-        @click="localMarkMovie()"
-        icon="mdi-bookmark" >
-          <v-icon :color="isMarked ? 'rgba(33, 194, 248, 0.8)' : 'rgba(189, 195, 199, 0.6)'"/>
+        <v-btn class="icon" @click="localMarkMovie()" icon="mdi-bookmark">
+          <v-icon
+            :color="
+              isMarked||isMarkChanged ? 'rgba(33, 194, 248, 0.8)' : 'rgba(189, 195, 199, 0.6)'
+            "
+          />
         </v-btn>
         <div @click="changeRating = !changeRating">
-          <v-btn
-          class="icon" 
-          v-if="!userRating&&!userRate" 
-          icon="mdi-star"/>
-          <div 
-          class="icon-number" 
-          v-else>
+          <v-btn class="icon" v-if="!userRating && !userRate" icon="mdi-star" />
+          <div class="icon-number" v-else>
             {{ userRate }}
           </div>
         </div>
       </div>
       <div class="slider" v-if="changeRating">
-        <v-slider 
-        v-model="userRate" 
-        @click="rateMovie(userRate, movie.id)" 
-        show-ticks="always" 
-        step="0.5" 
-        max="10"
-        min="0"/>
+        <v-slider
+          v-model="userRate"
+          @click="rateMovie(userRate, movie.id)"
+          show-ticks="always"
+          step="0.5"
+          max="10"
+          min="0"
+        />
       </div>
       <div class="ratings">
         <div>
-          <div>Кинопоиск <b class="value">{{ movie.rating.kp }}</b></div>
-          <div>IMBd <b class="value">{{ movie.rating.imdb }}</b></div>
+          <div>
+            Кинопоиск <b class="value">{{ movie.rating.kp }}</b>
+          </div>
+          <div>
+            IMBd <b class="value">{{ movie.rating.imdb }}</b>
+          </div>
         </div>
         <div>
-          <div>Оценка критиков в России <b class="value">{{ movie.rating.russianFilmCritics }}</b></div>
-          <div>Оценка критиков в мире <b class="value">{{ movie.rating.filmCritics }}</b></div>
+          <div>
+            Оценка критиков в России
+            <b class="value">{{ movie.rating.russianFilmCritics }}</b>
+          </div>
+          <div>
+            Оценка критиков в мире
+            <b class="value">{{ movie.rating.filmCritics }}</b>
+          </div>
         </div>
       </div>
       <div class="description">
@@ -69,18 +84,26 @@
       <div class="watchability" v-if="movie.watchability.items">
         Смотреть на
         <div class="servises">
-          <div class="servis" v-for="servis in movie.watchability.items" :key="servis.id">
+          <div
+            class="servis"
+            v-for="servis in movie.watchability.items"
+            :key="servis.id"
+          >
             <a :href="servis.url">
-              <v-img class="logo" :src="servis.logo.url"/>
+              <v-img class="logo" :src="servis.logo.url" />
             </a>
           </div>
         </div>
       </div>
       <div class="recommendation-list">
-        <div>Рекомендуем посмотреть </div>
-          <div class="cards">
-          <div class="recommendation" v-for="recommendation in recommendations" :key="recommendation.id">
-            <movie-card :movie="recommendation"/>
+        <div>Рекомендуем посмотреть</div>
+        <div class="cards">
+          <div
+            class="recommendation"
+            v-for="recommendation in recommendations"
+            :key="recommendation.id"
+          >
+            <movie-card :movie="recommendation" />
           </div>
         </div>
       </div>
@@ -89,70 +112,73 @@
 </template>
 
 <script>
-import MovieCard from '../components/MovieCard.vue';
-import { useMoviesStore } from '../store/movieStore';
+import MovieCard from "../components/MovieCard.vue";
+import { useMoviesStore } from "../store/movieStore";
 export default {
   setup() {
     const moviesStore = useMoviesStore();
     return {
-      moviesStore
-    }
+      moviesStore,
+    };
   },
-  components:{
-    MovieCard
+  components: {
+    MovieCard,
   },
   data() {
     return {
-      isMarked: false,
+      isMarkChanged: false,
       changeRating: false,
       userRate: 0,
-    }
+    };
   },
   computed: {
+    isMarked() {
+      this.moviesStore.allMarks = JSON.parse(localStorage.getItem("marks")) || [];
+      this.isMarkChanged = this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
+      return this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
+    },
     recommendations() {
-      return this.moviesStore.recomendMovies();
+      return this.moviesStore.recomendMovies(this.movie.id);
     },
     movie() {
-      return this.moviesStore.allMovies.find(movie => movie.id == this.$route.params.id);
+      return this.moviesStore.allMovies.find(
+        (movie) => movie.id == this.$route.params.id
+      );
     },
     timing() {
-      let time = '';
+      let time = "";
       const hours = Math.floor(this.movie.movieLength / 60);
       const minuts = this.movie.movieLength % 60;
       if (hours !== 0) {
-        time = hours + ' ч ';
+        time = hours + " ч ";
       }
       if (minuts !== 0) {
-        time = time + minuts + ' мин';
+        time = time + minuts + " мин";
       }
       return time;
     },
     userRating() {
       this.userRate = localStorage.getItem(this.movie.id);
       return localStorage.getItem(this.movie.id);
-    }
+    },
   },
   methods: {
-    localMarkMovie(){
-      this.moviesStore.allMarks = JSON.parse(localStorage.getItem('marks')) || [];
-      this.isMarked = !this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
+    localMarkMovie() {
+      this.moviesStore.allMarks = JSON.parse(localStorage.getItem("marks")) || [];
+      this.isMarkChanged = !this.moviesStore.allMarks.some(
+        (mark) => mark == this.movie.id
+      );
       this.moviesStore.markMovie(this.movie.id);
     },
     rateMovie(userRating, id) {
       this.changeRating = !this.changeRating;
       this.moviesStore.rateMovie(userRating, id);
-    }
+    },
   },
-  
+
   created() {
-    this.moviesStore.allMarks = JSON.parse(localStorage.getItem('marks')) || [];
-    this.isMarked = this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
-    this.userRate = +localStorage.getItem(this.movie.id);
+    this.moviesStore.fetchMovies();
   },
-  updated() {
-    this.moviesStore.allMarks = JSON.parse(localStorage.getItem('marks')) || [];
-    this.isMarked = this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
-  }
 };
 </script>
 
@@ -173,7 +199,8 @@ export default {
   align-items: end;
   text-align: end;
   flex-direction: column;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .name {
@@ -217,7 +244,7 @@ export default {
   cursor: pointer;
 }
 
-.icon-number{
+.icon-number {
   height: 50px;
   width: 50px;
   margin-right: 12px;
@@ -227,7 +254,7 @@ export default {
   font-size: 30px;
   border-radius: 30px;
   background-color: rgba(32, 32, 32, 0.6);
-  color:rgba(33, 194, 248, 0.8);
+  color: rgba(33, 194, 248, 0.8);
   cursor: pointer;
 }
 
@@ -252,7 +279,7 @@ export default {
 }
 
 .value {
-  color: #21C2F8;
+  color: #21c2f8;
 }
 
 .description {
@@ -286,7 +313,7 @@ export default {
   border-radius: 40px;
 }
 
-.recommendation-list{
+.recommendation-list {
   text-align: end;
   font-weight: 500;
   color: rgba(243, 247, 248, 1);
@@ -294,12 +321,12 @@ export default {
   font-style: italic;
 }
 
-.cards{
+.cards {
   display: flex;
   justify-content: end;
 }
 
-.recommendation{
+.recommendation {
   transform: scale(0.8);
   transform-origin: right top;
 }

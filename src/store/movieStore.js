@@ -56,23 +56,6 @@ export const useMoviesStore = defineStore({
       }
     },
 
-    updateList(newList) {
-      switch (newList) {
-        case 'main':
-          this.fetchMovies();
-          break;
-        case 'marks':
-          this.fetchMoviesMarks();
-          break;
-        case 'ratings':
-          this.fetchMoviesRates();
-          break;
-        default:
-          this.fetchMovies();
-          break;
-      }
-    },
-
     markMovie(id) {
       let marks = JSON.parse(localStorage.getItem('marks')) || [];
       if (marks.length) {
@@ -98,18 +81,22 @@ export const useMoviesStore = defineStore({
       }
     },
 
-    recomendMovies() {
+    recomendMovies(thisMovieId) {
       let list = [];
       let count = 3;
+      this.constMovies = this.constMovies.filter((movie) => movie.id != thisMovieId);
       while (list.length < count) {
+        if (this.constMovies.length == 0){
+          return list;
+        }
         const ind = Math.round(Math.random()*this.constMovies.length);
         const film = this.constMovies[ind];
         if (film) {
-          const dubl = list.find((move) => film.id === move.id);
           list.push(film);
+          this.constMovies = this.constMovies.filter((movie) => movie.id != film.id);
         }
       }
-      return list
+      return list;
     },
   }
 })

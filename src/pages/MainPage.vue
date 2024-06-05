@@ -23,8 +23,8 @@ export default {
     CardList,
     PagesNumbers,
   },
-  mounted() {
-    this.moviesStore.updateList("main");
+  created() {
+    this.moviesStore.fetchMovies();
   },
 };
 </script>

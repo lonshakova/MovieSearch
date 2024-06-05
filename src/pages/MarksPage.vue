@@ -24,7 +24,7 @@ export default {
     PagesNumbers,
   },
   created() {
-    this.moviesStore.updateList("marks");
+    this.moviesStore.fetchMoviesMarks();
   },
 };
 </script>
