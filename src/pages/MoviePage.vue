@@ -138,7 +138,9 @@ export default {
       return this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
     },
     recommendations() {
-      return this.moviesStore.recomendMovies(this.movie.id);
+      if (this.moviesStore.constMovies.length > 3) {
+        return this.moviesStore.recomendMovies(this.movie.id);
+      }
     },
     movie() {
       return this.moviesStore.allMovies.find(

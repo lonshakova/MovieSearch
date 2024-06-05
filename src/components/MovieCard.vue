@@ -103,11 +103,19 @@ export default {
     localMarkMovie() {
       this.moviesStore.allMarks = JSON.parse(localStorage.getItem('marks')) || [];
       this.isMarked = !this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
+      if (!this.isMarked){
+        this.moviesStore.constMovies = this.moviesStore.constMovies.filter((film) => film.id != this.movie.id);
+        this.moviesStore.constMovies = this.moviesStore.constMovies.filter((film) => film.id != this.movie.id);
+      }
       this.moviesStore.markMovie(this.movie.id);
     },
     rateMovie(userRate, id) {
       this.isRatingChange = !this.isRatingChange;
       this.moviesStore.rateMovie(userRate, id);
+      if (userRate == 0){
+        this.moviesStore.constMovies = this.moviesStore.constMovies.filter((film) => film.id != this.movie.id);
+        this.moviesStore.constMovies = this.moviesStore.constMovies.filter((film) => film.id != this.movie.id);
+      }
     }
   },
   created() {

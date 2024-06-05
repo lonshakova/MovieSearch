@@ -86,9 +86,6 @@ export const useMoviesStore = defineStore({
       let count = 3;
       this.constMovies = this.constMovies.filter((movie) => movie.id != thisMovieId);
       while (list.length < count) {
-        if (this.constMovies.length == 0){
-          return list;
-        }
         const ind = Math.round(Math.random()*this.constMovies.length);
         const film = this.constMovies[ind];
         if (film) {
