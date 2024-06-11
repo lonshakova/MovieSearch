@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     totalPages() {
-      this.moviesStore.movies=this.moviesStore.allMovies.slice(this.limit * this.page, this.limit * (this.page + 1));
+      this.moviesStore.updateMovies(this.limit, this.page);
       return Math.ceil(this.moviesStore.allMovies.length/this.limit);
     }
   },

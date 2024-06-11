@@ -10,8 +10,8 @@ export const useMoviesStore = defineStore({
     ratesMovies: [],
   }),
   actions: {
-    async fetchMovies() {
-      return await fetch('../../Data/kinopoisk-1.json')
+    fetchMovies() {
+      return fetch('../../Data/kinopoisk-1.json')
         .then(response => response.json())
         .then((data) => {
           this.allMovies = data.docs;
@@ -79,6 +79,10 @@ export const useMoviesStore = defineStore({
       else {
         window.localStorage.removeItem(id);
       }
+    },
+
+    updateMovies(limit, page) {
+      this.movies=this.allMovies.slice(limit * page, limit * (page + 1));
     },
 
     recomendMovies(thisMovieId) {
