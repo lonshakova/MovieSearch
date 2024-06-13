@@ -1,5 +1,5 @@
 <template>
-  <div class="card-list">
+  <div class="card-list" v-if="moviesStore.movies">
     <div v-for="movie in moviesStore.movies" :key="movie.id">
       <movie-card :movie="movie" />
     </div>
