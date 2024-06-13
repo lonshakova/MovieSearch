@@ -23,18 +23,21 @@ export const useMoviesStore = defineStore({
         });
     },
 
-    async fetchMoviesMarks() {
-      await this.fetchMovies();
-      this.loadMarks();
-      this.allMovies = this.allMarks;
-      this.constMovies = this.allMovies;
+    fetchMoviesMarks() {
+      this.fetchMovies().then(()=>{
+        this.loadMarks();
+        this.allMovies = this.allMarks;
+        this.constMovies = this.allMovies;
+      });
     },
 
-    async fetchMoviesRates() {
-      await this.fetchMovies();
-      this.loadRates();
-      this.allMovies = this.ratesMovies;
-      this.constMovies = this.allMovies;
+    fetchMoviesRates() {
+      this.fetchMovies().then(()=>{
+        this.loadRates();
+        this.allMovies = this.ratesMovies;
+        this.constMovies = this.allMovies;
+      });
+      
     },
 
     loadMarks() {

@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { watch } from 'vue';
 import { useMoviesStore } from "../store/movieStore";
 export default {
   setup() {
@@ -55,7 +56,6 @@ export default {
   },
   computed: {
     totalPages() {
-      this.moviesStore.updateMovies(this.limit, this.page);
       return Math.ceil(this.moviesStore.allMovies.length/this.limit);
     }
   },
@@ -64,6 +64,13 @@ export default {
       this.page = number;
     },
   },
+  updated() {
+    this.moviesStore.updateMovies(this.limit, this.page);
+    watch(() => this.moviesStore.allMovies, () => {
+      this.moviesStore.updateMovies(this.limit, this.page);
+      this.page = 0;
+    }, {deep: true});
+  }
 };
 </script>
 

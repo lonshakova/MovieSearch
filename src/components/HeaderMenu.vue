@@ -1,25 +1,49 @@
 <template>
   <v-toolbar class="toolbar">
-    <v-toolbar-title class="logo" @click="GoToMain"
-      >SearchMovie</v-toolbar-title
-    >
+    <v-toolbar-title 
+    class="logo" 
+    @click="GoToMain">
+      SearchMovie
+    </v-toolbar-title>
     <div class="btns">
       <v-hover v-slot="{ isHovering, props }">
-        <v-btn round class="btn" v-bind="props" @click="GoToMain">
+        <v-btn 
+        round 
+        class="btn" 
+        v-bind="props" 
+        @click="GoToMain">
           <v-icon icon="mdi-home" />
-          <div v-if="isHovering" class="name_btn">Главная</div>
+          <div 
+          v-if="isHovering" 
+          class="name_btn">
+            Главная
+          </div>
         </v-btn>
       </v-hover>
       <v-hover v-slot="{ isHovering, props }">
-        <v-btn class="btn" v-bind="props" @click="GoToMarks">
+        <v-btn 
+        class="btn" 
+        v-bind="props"
+         @click="GoToMarks">
           <v-icon icon="mdi-bookmark" />
-          <div v-if="isHovering" class="name_btn">Закладки</div>
+          <div 
+          v-if="isHovering" 
+          class="name_btn">
+            Закладки
+          </div>
         </v-btn>
       </v-hover>
       <v-hover v-slot="{ isHovering, props }">
-        <v-btn class="btn" v-bind="props" @click="GoToRates">
+        <v-btn 
+        class="btn" 
+        v-bind="props" 
+        @click="GoToRates">
           <v-icon icon="mdi-star" />
-          <div v-if="isHovering" class="name_btn">Оценки</div>
+          <div 
+          v-if="isHovering" 
+          class="name_btn">
+            Оценки
+          </div>
         </v-btn>
       </v-hover>
     </div>

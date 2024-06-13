@@ -37,18 +37,18 @@
         <v-btn class="icon" @click="localMarkMovie()" icon="mdi-bookmark">
           <v-icon
             :color="
-              isMarked||isMarkChanged ? 'rgba(33, 194, 248, 0.8)' : 'rgba(189, 195, 199, 0.6)'
+              isMarked ? 'rgba(33, 194, 248, 0.8)' : 'rgba(189, 195, 199, 0.6)'
             "
           />
         </v-btn>
         <div @click="changeRating = !changeRating">
-          <v-btn class="icon" v-if="!userRating && !userRate" icon="mdi-star" />
+          <v-btn class="icon" v-if="!userRate" icon="mdi-star" />
           <div class="icon-number" v-else>
             {{ userRate }}
           </div>
         </div>
       </div>
-      <div class="slider" v-if="changeRating">
+      <div class="slider" v-show="changeRating">
         <v-slider
           v-model="userRate"
           @click="rateMovie(userRate, movie.id)"
@@ -112,6 +112,7 @@
 </template>
 
 <script>
+import { watch } from 'vue';
 import MovieCard from "../components/MovieCard.vue";
 import { useMoviesStore } from "../store/movieStore";
 export default {
@@ -126,22 +127,13 @@ export default {
   },
   data() {
     return {
-      isMarkChanged: false,
+      isMarked: false,
       changeRating: false,
       userRate: 0,
+      recommendations: [],
     };
   },
   computed: {
-    isMarked() {
-      this.moviesStore.allMarks = JSON.parse(localStorage.getItem("marks")) || [];
-      this.isMarkChanged = this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
-      return this.moviesStore.allMarks.some((mark) => mark == this.movie.id);
-    },
-    recommendations() {
-      if (this.moviesStore.constMovies.length > 3) {
-        return this.moviesStore.recomendMovies(this.movie.id);
-      }
-    },
     movie() {
       return this.moviesStore.allMovies.find(
         (movie) => movie.id == this.$route.params.id
@@ -159,17 +151,11 @@ export default {
       }
       return time;
     },
-    userRating() {
-      this.userRate = localStorage.getItem(this.movie.id);
-      return localStorage.getItem(this.movie.id);
-    },
   },
   methods: {
     localMarkMovie() {
       this.moviesStore.allMarks = JSON.parse(localStorage.getItem("marks")) || [];
-      this.isMarkChanged = !this.moviesStore.allMarks.some(
-        (mark) => mark == this.movie.id
-      );
+      this.isMarked = !this.isMarked;
       this.moviesStore.markMovie(this.movie.id);
     },
     rateMovie(userRating, id) {
@@ -180,7 +166,17 @@ export default {
 
   created() {
     this.moviesStore.fetchMovies();
+    this.userRate = localStorage.getItem(this.$route.params.id);
+    this.moviesStore.allMarks = JSON.parse(localStorage.getItem("marks")) || [];
+    this.isMarked = this.moviesStore.allMarks.some((mark) => mark == this.$route.params.id);
   },
+  mounted() {
+    watch(() => this.movie, () => {
+      if (this.moviesStore.constMovies.length > 3 ) {
+        this.recommendations = this.moviesStore.recomendMovies(this.$route.params.id);
+      }
+    }, {deep: true});
+  }
 };
 </script>
 
