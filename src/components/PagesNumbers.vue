@@ -64,12 +64,14 @@ export default {
       this.page = number;
     },
   },
-  updated() {
-    this.moviesStore.updateMovies(this.limit, this.page);
+  mounted() {
     watch(() => this.moviesStore.allMovies, () => {
       this.moviesStore.updateMovies(this.limit, this.page);
       this.page = 0;
     }, {deep: true});
+  },
+  updated() {
+    this.moviesStore.updateMovies(this.limit, this.page);
   }
 };
 </script>

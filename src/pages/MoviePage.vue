@@ -41,14 +41,14 @@
             "
           />
         </v-btn>
-        <div @click="changeRating = !changeRating">
+        <div @click="isRatingChange = !isRatingChange">
           <v-btn class="icon" v-if="!userRate" icon="mdi-star" />
           <div class="icon-number" v-else>
             {{ userRate }}
           </div>
         </div>
       </div>
-      <div class="slider" v-show="changeRating">
+      <div class="slider" v-show="isRatingChange">
         <v-slider
           v-model="userRate"
           @click="rateMovie(userRate, movie.id)"
@@ -128,7 +128,7 @@ export default {
   data() {
     return {
       isMarked: false,
-      changeRating: false,
+      isRatingChange: false,
       userRate: 0,
       recommendations: [],
     };
@@ -159,7 +159,7 @@ export default {
       this.moviesStore.markMovie(this.movie.id);
     },
     rateMovie(userRating, id) {
-      this.changeRating = !this.changeRating;
+      this.isRatingChange = !this.isRatingChange;
       this.moviesStore.rateMovie(userRating, id);
     },
   },
