@@ -6,15 +6,14 @@
         placeholder="Введите название фильма..."
         variant="plain"
         append-inner-icon="mdi-magnify"
-        v-model="searchQuery"
+        v-model="moviesStore.searchQuery"
       />
-      {{ searchMovies }}
     </div>
     <div class="select">
       <v-select
         class="select-item"
         :items="items"
-        v-model="selectedSort.value"
+        v-model="moviesStore.selectedSort.value"
         item-title="name"
         variant="plain"
       />
@@ -33,8 +32,6 @@ export default {
   },
   data() {
     return {
-      selectedSort: { value: "name", name: "По названию" },
-      searchQuery: null,
       items: [
         { value: "name", name: "По названию" },
         { value: "year", name: "По году" },
@@ -42,45 +39,6 @@ export default {
         { value: "movieLength", name: "По длительности" },
       ],
     };
-  },
-  computed: {
-    sortedMovies() {
-      switch (this.selectedSort.value) {
-        case "name":
-          return this.moviesStore.constMovies.sort((movie1, movie2) =>
-            movie1.name?.localeCompare(movie2.name)
-          );
-        case "year":
-          return this.moviesStore.constMovies.sort(
-            (movie1, movie2) => movie1.year - movie2.year
-          );
-        case "movieLength":
-          return this.moviesStore.constMovies.sort(
-            (movie1, movie2) => movie1.movieLength - movie2.movieLength
-          );
-        case "rating":
-          this.moviesStore.loadRates();
-          return this.moviesStore.constMovies.sort(
-            (movie1, movie2) =>
-              localStorage.getItem(movie2.id) - localStorage.getItem(movie1.id)
-          );
-        default:
-          return this.moviesStore.constMovies;
-      }
-    },
-    searchMovies() {
-      if (!this.sortedMovies) {
-        this.moviesStore.allMovies = this.sortedMovies;
-      }
-      if (this.searchQuery) {
-        const sortMovies = this.sortedMovies.filter((movie) =>
-          movie.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-        this.moviesStore.allMovies = sortMovies;
-      } else {
-        this.moviesStore.allMovies = this.sortedMovies;
-      }
-    },
   },
 };
 </script>

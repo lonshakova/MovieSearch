@@ -4,18 +4,42 @@ export const useMoviesStore = defineStore({
   id: 'movies',
   state: () => ({
     movies: [],
-    constMovies: [],
     allMovies:[],
     allMarks: [],
     ratesMovies: [],
+    selectedSort: { value: "name", name: "По названию" },
+    searchQuery: null,
   }),
+  getters: {
+    sortedMovies(state) {
+      switch (state.selectedSort.value) {
+        case 'name':
+          return state.allMovies.sort((movie1, movie2) => movie1.name?.localeCompare(movie2.name));
+        case 'year':
+          return state.allMovies.sort((movie1, movie2) => movie1.year - movie2.year);
+        case 'movieLength':
+          return state.allMovies.sort((movie1, movie2) => movie1.movieLength - movie2.movieLength);
+        case 'rating':
+          return state.allMovies.sort((movie1, movie2) => localStorage.getItem(movie2.id) - localStorage.getItem(movie1.id));
+        default:
+          return state.allMovies;
+      }
+    },
+    searchMovies(state) {
+      if (!this.sortedMovies) {return this.sortedMovies}
+      if (state.searchQuery === null) {
+        return this.sortedMovies;
+      }
+      return this.sortedMovies.filter(movie => movie.name.toLowerCase().includes(state.searchQuery.toLowerCase()));
+    },
+
+  },
   actions: {
     fetchMovies() {
       return fetch('../../Data/kinopoisk-1.json')
         .then(response => response.json())
         .then((data) => {
           this.allMovies = data.docs;
-          this.constMovies = this.allMovies;
           return data.docs;
         })
         .catch(error => {
@@ -27,7 +51,6 @@ export const useMoviesStore = defineStore({
       this.fetchMovies().then(()=>{
         this.loadMarks();
         this.allMovies = this.allMarks;
-        this.constMovies = this.allMovies;
       });
     },
 
@@ -35,7 +58,6 @@ export const useMoviesStore = defineStore({
       this.fetchMovies().then(()=>{
         this.loadRates();
         this.allMovies = this.ratesMovies;
-        this.constMovies = this.allMovies;
       });
       
     },
@@ -85,19 +107,23 @@ export const useMoviesStore = defineStore({
     },
 
     updateMovies(limit, page) {
-      this.movies=this.allMovies.slice(limit * page, limit * (page + 1));
+      this.movies=this.searchMovies.slice(limit * page, limit * (page + 1));
     },
 
     recomendMovies(thisMovieId) {
       let list = [];
       let count = 3;
-      this.constMovies = this.constMovies.filter((movie) => movie.id != thisMovieId);
       while (list.length < count) {
-        const ind = Math.round(Math.random()*this.constMovies.length);
-        const film = this.constMovies[ind];
+        const ind = Math.round(Math.random()*this.allMovies.length);
+        const film = this.allMovies[ind];
         if (film) {
-          list.push(film);
-          this.constMovies = this.constMovies.filter((movie) => movie.id != film.id);
+          const dubl = list.find((movie) => film.id === movie.id || thisMovieId.id === movie.id);
+          if (dubl) {
+            continue
+          }
+          else {
+            list.push(film);
+          }
         }
       }
       return list;

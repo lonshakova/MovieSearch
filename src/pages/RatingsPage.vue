@@ -1,8 +1,8 @@
 <template>
   <div class="ratings">
-    <search-movie />
-    <card-list />
-    <pages-numbers />
+    <SearchMovie />
+    <CardList />
+    <PagesNumbers />
   </div>
 </template>
 

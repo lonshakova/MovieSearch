@@ -103,7 +103,7 @@
             v-for="recommendation in recommendations"
             :key="recommendation.id"
           >
-            <movie-card :movie="recommendation" />
+            <MovieCard :movie="recommendation" />
           </div>
         </div>
       </div>
@@ -166,13 +166,13 @@ export default {
 
   created() {
     this.moviesStore.fetchMovies();
-    this.userRate = localStorage.getItem(this.$route.params.id);
-    this.moviesStore.allMarks = JSON.parse(localStorage.getItem("marks")) || [];
-    this.isMarked = this.moviesStore.allMarks.some((mark) => mark == this.$route.params.id);
   },
   mounted() {
     watch(() => this.movie, () => {
-      if (this.moviesStore.constMovies.length > 3 ) {
+      this.userRate = localStorage.getItem(this.$route.params.id);
+      this.moviesStore.allMarks = JSON.parse(localStorage.getItem("marks")) || [];
+      this.isMarked = this.moviesStore.allMarks.some((mark) => mark == this.$route.params.id);
+      if (this.moviesStore.allMovies.length > 3 ) {
         this.recommendations = this.moviesStore.recomendMovies(this.$route.params.id);
       }
     }, {deep: true});

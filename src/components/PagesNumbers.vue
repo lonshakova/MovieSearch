@@ -56,7 +56,7 @@ export default {
   },
   computed: {
     totalPages() {
-      return Math.ceil(this.moviesStore.allMovies.length/this.limit);
+      return Math.ceil(this.moviesStore.searchMovies.length/this.limit);
     }
   },
   methods: {
@@ -65,7 +65,7 @@ export default {
     },
   },
   mounted() {
-    watch(() => this.moviesStore.allMovies, () => {
+    watch(() => this.moviesStore.searchMovies, () => {
       this.moviesStore.updateMovies(this.limit, this.page);
       this.page = 0;
     }, {deep: true});
