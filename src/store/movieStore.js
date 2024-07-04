@@ -3,12 +3,14 @@ import { defineStore } from 'pinia'
 export const useMoviesStore = defineStore({
   id: 'movies',
   state: () => ({
-    movies: [],
+    // movies: [],
     allMovies:[],
     allMarks: [],
     ratesMovies: [],
     selectedSort: { value: "name", name: "По названию" },
     searchQuery: null,
+    limit: 24,
+    page: 0,
   }),
   getters: {
     sortedMovies(state) {
@@ -26,11 +28,11 @@ export const useMoviesStore = defineStore({
       }
     },
     searchMovies(state) {
-      if (!this.sortedMovies) {return this.sortedMovies}
+      if (!this.sortedMovies) {return  this.allMovies.slice(this.limit * this.page, this.limit * (this.page + 1))}
       if (state.searchQuery === null) {
-        return this.sortedMovies;
+        return this.allMovies.slice(this.limit * this.page, this.limit * (this.page + 1));
       }
-      return this.sortedMovies.filter(movie => movie.name.toLowerCase().includes(state.searchQuery.toLowerCase()));
+      return this.allMovies.filter(movie => movie.name.toLowerCase().includes(state.searchQuery.toLowerCase())).slice(this.limit * this.page, this.limit * (this.page + 1));
     },
 
   },
@@ -106,9 +108,9 @@ export const useMoviesStore = defineStore({
       }
     },
 
-    updateMovies(limit, page) {
-      this.movies=this.searchMovies.slice(limit * page, limit * (page + 1));
-    },
+    // updateMovies(limit, page) {
+    //   this.movies=this.allMovies.slice(limit * page, limit * (page + 1));
+    // },
 
     recomendMovies(thisMovieId) {
       let list = [];

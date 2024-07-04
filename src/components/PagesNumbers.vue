@@ -3,9 +3,9 @@
     <v-btn
       variant="plain"
       class="arrow"
-      v-if="totalPages > 1 && page > 0"
+      v-if="totalPages > 1 && moviesStore.page > 0"
       icon="mdi-chevron-left"
-      @click="updatePage(page - 1)"
+      @click="updatePage(moviesStore.page - 1)"
     />
     <div v-for="number in totalPages" :key="number">
       <v-hover v-slot="{ isHovering, props }">
@@ -13,7 +13,7 @@
           class="number"
           v-bind="props"
           :elevation="isHovering ? 12 : 2"
-          v-if="number !== page + 1"
+          v-if="number !== moviesStore.page + 1"
           min-width="40px"
           @click="updatePage(number - 1)"
         >
@@ -29,10 +29,10 @@
       class="arrow"
       v-if="
         totalPages > 1 &&
-        page < totalPages - 1
+        moviesStore.page < totalPages - 1
       "
       icon="mdi-chevron-right"
-      @click="updatePage(page + 1)"
+      @click="updatePage(moviesStore.page + 1)"
     />
   </div>
 </template>
@@ -49,30 +49,29 @@ export default {
   },
   data() {
     return {
-      limit: 24,
-      page: 0,
+      
       
     };
   },
   computed: {
     totalPages() {
-      return Math.ceil(this.moviesStore.searchMovies.length/this.limit);
+      return Math.ceil(this.moviesStore.allMovies.length/this.moviesStore.limit);
     }
   },
   methods: {
     updatePage(number) {
-      this.page = number;
+      this.moviesStore.page = number;
     },
   },
-  mounted() {
-    watch(() => this.moviesStore.searchMovies, () => {
-      this.moviesStore.updateMovies(this.limit, this.page);
-      this.page = 0;
-    }, {deep: true});
-  },
-  updated() {
-    this.moviesStore.updateMovies(this.limit, this.page);
-  }
+  // mounted() {
+  //   watch(() => this.moviesStore.searchMovies, () => {
+  //     this.moviesStore.updateMovies(this.limit, this.page);
+  //     this.page = 0;
+  //   }, {deep: true});
+  // },
+  // updated() {
+  //   this.moviesStore.updateMovies(this.limit, this.page);
+  // }
 };
 </script>
 

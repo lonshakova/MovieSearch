@@ -118,7 +118,7 @@
           this.$router.options.history.state.current == "/marks" &&
           this.isMarked == false
         ) {
-          this.moviesStore.movies = this.moviesStore.movies.filter(
+          this.moviesStore.allMovies = this.moviesStore.allMovies.filter(
             (film) => film.id != this.movie.id
           );
         }
@@ -130,7 +130,7 @@
           this.$router.options.history.state.current == "/ratings" &&
           userRate == 0
         ) {
-          this.moviesStore.movies = this.moviesStore.movies.filter(
+          this.moviesStore.allMovies = this.moviesStore.allMovies.filter(
             (film) => film.id != this.movie.id
           );
         }

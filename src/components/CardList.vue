@@ -1,6 +1,6 @@
 <template>
-  <div class="card-list" v-if="moviesStore.allMovies">
-    <div v-for="movie in moviesStore.movies" :key="movie.id">
+  <div class="card-list">
+    <div v-for="movie in moviesStore.searchMovies" :key="movie.id">
       <MovieCard :movie="movie" />
     </div>
   </div>
